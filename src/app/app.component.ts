@@ -15,7 +15,7 @@ export class AppComponent implements OnInit{
   public employees: Employee[] = [];
   public editEmployee: Employee | null = null; // Now can be null
   public deleteEmployee: Employee | null = null; // Now can be null
-
+  notFoundMessage: string = '';
 
   constructor(
     private employeeService: EmployeeService,
@@ -43,6 +43,7 @@ export class AppComponent implements OnInit{
   }
   public onAddEmployee(addForm: NgForm): void {
     if (addForm.valid) {
+      console.log("form add",addForm.value);
       this.employeeService.addEmployee(addForm.value).subscribe({
         next: (response) => {
           console.log('Employee added:', response); // Log the response to see what's returned
@@ -113,6 +114,12 @@ export class AppComponent implements OnInit{
     this.employees = results;
     if (results.length === 0 || !key) {
       this.getEmployees();
+      if (results.length === 0 && key.trim() !== '') {
+        this.notFoundMessage = 'No employees found matching your search ';
+       
+      } else {
+        this.notFoundMessage = ''; // reset message when there are results or empty key
+      }
     }
   }
 
